@@ -3,7 +3,7 @@
 	left: 0;
 	width: 616px;
 	height: 100%;
-	overflow: scroll;
+	//overflow: scroll;
 	transform: translate(-616px);
 	transition: transform 0.5s ease;
 }
@@ -29,4 +29,13 @@
 	display: flex;
 	justify-content: space-between;
 	margin-top: auto;
+}
+
+.header{
+	font-family: "Open Sans";
+	color:  #000000;
+	text-transform: uppercase;
+	font-size: 31px;
+	font-weight: 800;
+	line-height: 42.22px;
 }

@@ -14,6 +14,15 @@
 	background: var(--gold, #ffc802);
 }
 
-.button:hover {
+.button[type='button'] {
 	background: var(--gold, #ffc802);
 }
+
+.button[type='button']:hover {
+	background: #ffedab;
+}
+
+.button[type='reset']:hover {
+	filter: invert(100%);
+}
+
