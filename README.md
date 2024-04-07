@@ -16,7 +16,7 @@ npm run storybook
 npm run stylelint
 ```
 
-Для запуска линтера выполните:
+Для запуска линтера выполните вот такие действия:
 
 ```
 npm run lint
