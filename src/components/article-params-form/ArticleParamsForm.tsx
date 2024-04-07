@@ -10,131 +10,114 @@ import {
 	contentWidthArr,
 	defaultArticleState,
 	ArticleStateType,
+	OptionType,
 } from 'src/constants/articleProps';
 import { Separator } from '../separator';
 
 import { useRef, useState } from 'react';
-import { useOutsideClickClose } from '../select/hooks/useOutsideClickClose';
 import { ArrowButton } from '../arrow-button';
-import { setMenuVisible } from '../select/helpers/setMenuVisible';
+import { Text } from '../text';
+import { useClose } from '../select/hooks/useClose';
+import clsx from 'clsx';
 
 type TArticleParamsForm = {
 	applyClassChange: (selected: ArticleStateType) => void;
 };
 
 export const ArticleParamsForm = ({ applyClassChange }: TArticleParamsForm) => {
-	const [isOpen, setMenu] = useState(false);
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const refMenuElement = useRef<HTMLDivElement>(null);
 	const [classState, setClass] = useState(defaultArticleState);
 
 	const toggleMenu = (value: boolean) => {
-		setMenu(value);
+		setIsMenuOpen(value);
 	};
 
-	useOutsideClickClose({
-		isOpen: isOpen,
+	useClose({
+		isOpen: isMenuOpen,
+		onClose: () => setIsMenuOpen(false),
 		rootRef: refMenuElement,
-		onChange: setMenu,
 	});
 
-	const handleClassChange = (selected: Partial<ArticleStateType>) => {
-		setClass({ ...classState, ...selected });
+	const handleFontFamily = (selected: OptionType) => {
+		setClass({ ...classState, fontFamilyOption: selected });
+	};
+
+	const handleFontSize = (selected: OptionType) => {
+		setClass({ ...classState, fontSizeOption: selected });
+	};
+
+	const handleFontColor = (selected: OptionType) => {
+		setClass({ ...classState, fontColor: selected });
+	};
+
+	const handleBackgroundColor = (selected: OptionType) => {
+		setClass({ ...classState, backgroundColor: selected });
+	};
+
+	const handlecontentWidth = (selected: OptionType) => {
+		setClass({ ...classState, contentWidth: selected });
 	};
 
 	const setDefault = () => {
 		setClass(defaultArticleState);
 	};
 
+	const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		applyClassChange(classState);
+		setIsMenuOpen(false);
+	};
+
+	const resetForm = () => {
+		setDefault();
+		applyClassChange(defaultArticleState);
+	};
+
 	return (
 		<>
-			<ArrowButton onChange={toggleMenu} menuStatus={isOpen} />
+			<ArrowButton onChange={toggleMenu} menuStatus={isMenuOpen} />
 			<aside
 				ref={refMenuElement}
-				className={setMenuVisible(
-					isOpen,
-					styles.container,
-					styles.container_open
-				)}>
-				<form className={styles.form}>
-					<h2 className={styles.header}>задайте параметры</h2>
-					<div
-						style={{
-							height: 50,
-						}}></div>
+				className={clsx(styles.container, isMenuOpen && styles.container_open)}>
+				<form className={styles.form} onSubmit={submitForm} onReset={resetForm}>
+					<Text as={'h2'} size={31} weight={800} uppercase={true}>
+						задайте параметры
+					</Text>
 					<Select
 						selected={classState.fontFamilyOption}
 						options={fontFamilyOptions}
 						title='шрифт'
-						onChange={(value) => handleClassChange({ fontFamilyOption: value })}
+						onChange={handleFontFamily}
 					/>
-					<div
-						style={{
-							height: 50,
-						}}></div>
-
 					<RadioGroup
 						name='размер шрифта'
 						options={fontSizeOptions}
 						selected={classState.fontSizeOption}
 						title='размер шрифта'
-						onChange={(value) =>
-							handleClassChange({ fontSizeOption: value })
-						}></RadioGroup>
-					<div
-						style={{
-							height: 50,
-						}}></div>
+						onChange={handleFontSize}></RadioGroup>
 					<Select
 						selected={classState.fontColor}
 						options={fontColors}
 						title='цвет шрифта'
-						onChange={(value) => handleClassChange({ fontColor: value })}
+						onChange={handleFontColor}
 					/>
-					<div
-						style={{
-							height: 50,
-						}}></div>
-
 					<Separator />
-					<div
-						style={{
-							height: 50,
-						}}></div>
-
 					<Select
 						selected={classState.backgroundColor}
 						options={backgroundColors}
 						title='цвет фона'
-						onChange={(value) => handleClassChange({ backgroundColor: value })}
+						onChange={handleBackgroundColor}
 					/>
-					<div
-						style={{
-							height: 50,
-						}}></div>
-
 					<Select
 						selected={classState.contentWidth}
 						options={contentWidthArr}
 						title='ширина контента'
-						onChange={(value) => handleClassChange({ contentWidth: value })}
+						onChange={handlecontentWidth}
 					/>
 					<div className={styles.bottomContainer}>
-						<Button
-							title='Сбросить'
-							type='reset'
-							onClick={() => {
-								setDefault();
-								applyClassChange(defaultArticleState);
-							}}
-						/>
-						<Button
-							title='Применить'
-							type='button'
-							onClick={() => {
-								applyClassChange(classState);
-								setMenu(false);
-							}}
-						/>
+						<Button title='Сбросить' type='reset' />
+						<Button title='Применить' type='submit' />
 					</div>
 				</form>
 			</aside>

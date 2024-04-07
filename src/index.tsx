@@ -31,10 +31,10 @@ const App = () => {
 	};
 
 	return (
-		<div className={clsx(styles.main)} style={classState}>
+		<main className={clsx(styles.main)} style={classState}>
 			<ArticleParamsForm applyClassChange={applyClassChange} />
 			<Article />
-		</div>
+		</main>
 	);
 };
 
